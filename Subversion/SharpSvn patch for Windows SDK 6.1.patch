@@ -1,0 +1,152 @@
+Index: imports/Default.build
+===================================================================
+--- imports/Default.build	(revision 1329)
++++ imports/Default.build	(working copy)
+@@ -41,7 +41,8 @@
+   <!-- Prefix to use for dependency DLL's -->
+   <property name="dllPrefix" value="SharpSvn-" overwrite="false" />
+ 
+-  <property name="vcVarsPath" value="C:\Program Files\Microsoft Visual Studio 8\VC" />
++  <property name="vcVarsPath" value="C:\Program Files\Microsoft Visual Studio 9.0\VC" />
++  <property name="VCBuildForFirstUpgradeStep" value="C:\Program Files\Microsoft Visual Studio 8\VC\VCPackages\vcbuild.exe"/>
+ 
+   <include buildfile="scripts/default.build" />
+ 
+Index: imports/scripts/apr.build
+===================================================================
+--- imports/scripts/apr.build	(revision 1329)
++++ imports/scripts/apr.build	(working copy)
+@@ -68,10 +68,10 @@
+           </items>
+         </in>
+         <do>
+-          <VCBuild platform="${platform}">
++          <exec program="${VCBuildForFirstUpgradeStep}">
+             <arg line="/upgrade" />
+             <arg line="${project}" />
+-          </VCBuild>
++          </exec>
+         </do>
+       </foreach>
+     </OnceBlock>
+@@ -88,6 +88,10 @@
+         </in>
+         <do>
+           <VCProjAddPlatform project="${vcproj}" platform="${platform}" fromPlatform="win32" />
++          <VCBuild platform="${platform}">
++            <arg line="/upgrade" />
++            <arg line="${vcproj}" />
++          </VCBuild>
+         </do>
+       </foreach>
+       <foreach item="File" property="vcproj">
+Index: imports/scripts/bdb.build
+===================================================================
+--- imports/scripts/bdb.build	(revision 1329)
++++ imports/scripts/bdb.build	(working copy)
+@@ -21,10 +21,11 @@
+           </items>
+         </in>
+         <do>
+-          <VCBuild>
++		<echo message="${dsp}" />
++          <exec program="${VCBuildForFirstUpgradeStep}">
+             <arg line="/upgrade" />
+             <arg value="${dsp}" />
+-          </VCBuild>
++          </exec>
+         </do>
+       </foreach>
+     </OnceBlock>
+@@ -36,6 +37,10 @@
+           </items>
+         </in>
+         <do>
++          <VCBuild>
++            <arg line="/upgrade" />
++            <arg value="${vcproj}" />
++          </VCBuild>
+           <loadfile file="${vcproj}" property="projtext">
+             <filterchain>
+               <replacestring from='PreprocessorDefinitions="' to='PreprocessorDefinitions="_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;' />
+Index: imports/scripts/zlib.build
+===================================================================
+--- imports/scripts/zlib.build	(revision 1329)
++++ imports/scripts/zlib.build	(working copy)
+@@ -12,10 +12,10 @@
+           </items>
+         </in>
+         <do>
+-          <VCBuild>
++          <exec program="${VCBuildForFirstUpgradeStep}">
+             <arg line="/upgrade" />
+             <arg value="${dsp}" />
+-          </VCBuild>
++          </exec>
+         </do>
+       </foreach>
+     </OnceBlock>
+@@ -28,6 +28,10 @@
+         </in>
+         <do>
+           <VCProjAddPlatform project="${vcproj}" platform="${platform}" fromPlatform="win32" />
++          <VCBuild>
++            <arg line="/upgrade" />
++            <arg value="${vcproj}" />
++          </VCBuild>
+         </do>
+       </foreach>
+     </OnceBlock>
+Index: imports/SharpSvn-SvnI18n/SharpSvn-SvnI18n.vcproj
+===================================================================
+--- imports/SharpSvn-SvnI18n/SharpSvn-SvnI18n.vcproj	(revision 1329)
++++ imports/SharpSvn-SvnI18n/SharpSvn-SvnI18n.vcproj	(working copy)
+@@ -1,11 +1,12 @@
+ <?xml version="1.0" encoding="Windows-1252"?>
+ <VisualStudioProject
+ 	ProjectType="Visual C++"
+-	Version="8,00"
++	Version="9.00"
+ 	Name="SharpSvn-SvnI18n"
+ 	ProjectGUID="{8F72E4A3-EBA5-4DFD-A64F-FA16FF9F293B}"
+ 	RootNamespace="SharpSvnSvnI18n"
+ 	Keyword="Win32Proj"
++	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -309,6 +310,4 @@
+ 			>
+ 		</File>
+ 	</Files>
+-	<Globals>
+-	</Globals>
+ </VisualStudioProject>
+Index: src/SharpSvn.UI/SharpSvn.UI-2008.csproj
+===================================================================
+--- src/SharpSvn.UI/SharpSvn.UI-2008.csproj	(revision 1329)
++++ src/SharpSvn.UI/SharpSvn.UI-2008.csproj	(working copy)
+@@ -47,6 +47,9 @@
+     <Reference Include="System.Drawing" />
+     <Reference Include="System.Windows.Forms" />
+     <Reference Include="System.Xml" />
++	<Reference Include="SharpSvn">
++	  <HintPath>..\SharpSvn\bin_2008\Win32\Release\SharpSvn.dll</HintPath>
++	</Reference>
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="Authentication\SvnUIForm.cs">
+@@ -150,11 +153,11 @@
+     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ProjectReference Include="..\SharpSvn\SharpSvn-VS2008.vcproj">
++    <!--<ProjectReference Include="..\SharpSvn\SharpSvn-VS2008.vcproj">
+       <Project>{A3166809-1484-4442-BF75-5FB0E8356381}</Project>
+       <Name>SharpSvn</Name>
+       <Private>True</Private>
+-    </ProjectReference>
++    </ProjectReference>-->
+   </ItemGroup>
+   <ItemGroup>
+     <Content Include="SharpSvn.UI.csproj" />
