@@ -88,7 +88,6 @@ namespace AvalonDock
                 new CommandBinding(ShowDocumentsListMenuCommand, ExecutedShowDocumentsListMenuCommand, CanExecuteShowDocumentsListMenuCommand));
             this.CommandBindings.Add(
                 new CommandBinding(ApplicationCommands.Close, ExecutedCloseCommand, CanExecuteCloseCommand));
-            ApplicationCommands.Close.InputGestures.Add(new MouseGesture(MouseAction.MiddleClick));
 
             this.CommandBindings.Add(
                 new CommandBinding(CloseAllButThisCommand, this.OnExecuteCommand, this.OnCanExecuteCommand));
@@ -332,6 +331,8 @@ namespace AvalonDock
         {
             _optionsContextMenuPlacementTarget = GetTemplateChild("PART_ShowContextMenuButton") as UIElement;
 
+            
+
             base.OnApplyTemplate();
         }
 
@@ -391,14 +392,32 @@ namespace AvalonDock
 
         internal void CheckContentsEmpty()
         { 
-            if (IsMainDocumentPane.HasValue &&
-                !IsMainDocumentPane.Value &&
-                Items.Count == 0)
+            if (Items.Count == 0)
             {
-                ResizingPanel containerPanel = Parent as ResizingPanel;
-                if (containerPanel != null)
-                    containerPanel.RemoveChild(this);
-            }        
+                bool isMainDocPaneToBeClose = IsMainDocumentPane.HasValue &&
+                    IsMainDocumentPane.Value;
+
+                if (isMainDocPaneToBeClose)
+                {
+                    DockingManager manager = GetManager();
+                    DocumentPane candidateNewMainDocPane = manager.FindAnotherLogicalChildContained<DocumentPane>(this);
+                    if (candidateNewMainDocPane != null)
+                    {
+                        ResizingPanel containerPanel = Parent as ResizingPanel;
+                        if (containerPanel != null)
+                            containerPanel.RemoveChild(this);
+
+                        manager.MainDocumentPane = candidateNewMainDocPane;
+                    }
+                }
+                else
+                {
+                    ResizingPanel containerPanel = Parent as ResizingPanel;
+                    if (containerPanel != null)
+                        containerPanel.RemoveChild(this);
+                }
+            }
+
         }
 
 
