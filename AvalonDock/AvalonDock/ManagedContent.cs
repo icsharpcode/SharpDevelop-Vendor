@@ -86,7 +86,8 @@ namespace AvalonDock
 
                 if (childCtrl != null)
                 {
-                    childCtrl.CallMethod("Refresh", null);
+                    //childCtrl.CallMethod("Refresh", null);
+                    this.Dispatcher.Invoke(new Action<object>((o) => o.CallMethod("Refresh", null)), DispatcherPriority.Render, childCtrl);
                 }
             }
 		}
