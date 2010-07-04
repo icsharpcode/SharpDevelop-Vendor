@@ -154,7 +154,7 @@
     <value>Chiudi</value>
   </data>
   <data name="DocumentPaneCommands_NewHorizontalTabGroup" xml:space="preserve">
-    <value>Crea gruppo di schede orizontale</value>
+    <value>Crea gruppo di schede orizzontale</value>
   </data>
   <data name="DocumentPaneCommands_NewVerticalTabGroup" xml:space="preserve">
     <value>Crea gruppo di schede verticale</value>
